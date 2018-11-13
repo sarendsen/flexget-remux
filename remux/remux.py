@@ -71,10 +71,6 @@ class Remux(object):
       log.debug('nothing accepted, aborting')
       return
 
-    if config['subtitles'] == 'keep':
-      log.debug('nothing to remux, aborting')
-      return
-
     for entry in task.accepted:
       if not 'location' in entry:
         log.debug('no file location specified, aborting')
@@ -88,32 +84,23 @@ class Remux(object):
 
       # subtitles
       sub_tracks = {}
+      languages = {}
+      formats = {}
       remove_all = True if config['subtitles'] == 'remove' else False
+      keep_all = True if config['subtitles'] == 'keep' else False
 
       if not remove_all:
-        languages = config['subtitles'].get('languages', {})
-        formats = config['subtitles'].get('formats', {})
-
-        if not languages and not formats:
-          log.debug('Nothing to remux')
-          return
+        if not keep_all:
+          languages = config['subtitles'].get('languages', {})
+          formats = config['subtitles'].get('formats', {})
 
         # get current subtitle tracks
         sub_tracks = self.filter_tracks(file_info['tracks'], 'type', ['subtitles'])
-        sub_tracks_count = len(sub_tracks)
         sub_tracks = self.filter_subtitle_tracks(
           tracks=sub_tracks,
           languages=languages,
           formats=formats
         )
-
-        if sub_tracks_count == len(sub_tracks):
-          log.debug('Nothing to remux')
-          return
-      else:
-        if len(self.filter_tracks(file_info['tracks'], 'type', ['subtitles'])) == 0:
-          log.debug('Nothing to remux')
-          return
 
       src = entry['location']
       file_name = filter_pathname(src)
