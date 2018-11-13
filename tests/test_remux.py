@@ -18,6 +18,9 @@ def setup_files(request):
     os.path.join(FILES_ORG_PATH, 'test.mkv')
   ]
 
+  shutil.rmtree(FILES_REMUX_PATH)
+  os.makedirs(FILES_REMUX_PATH)
+
   for file in files:
     shutil.copy2(file, FILES_REMUX_PATH)
 
@@ -25,14 +28,15 @@ def setup_files(request):
 @pytest.mark.usefixtures("setup_files")
 class TestRemuxSubtitles(object):
   org_file = os.path.join(FILES_ORG_PATH, 'test.mkv')
-  remux_file = os.path.join(FILES_REMUX_PATH, 'test.mkv')
+  test_file = os.path.join(FILES_REMUX_PATH, 'test.mkv')
+  remuxed_file = os.path.join(FILES_REMUX_PATH, 'test-remuxed.mkv')
 
   config = """
       tasks:
         test_mixed:
           accept_all: yes
           mock:
-            - {title: 'test.mkv', 'location': '""" + remux_file + """'}
+            - {title: 'test.mkv', 'location': '""" + test_file + """'}
           remux:
             subtitles:                  # 'keep' | 'remove' | dict of options
               languages:                # allowed languages
@@ -44,33 +48,33 @@ class TestRemuxSubtitles(object):
         test_keep:
           accept_all: yes
           mock:
-            - {title: 'test.mkv', 'location': '""" + remux_file + """'}
+            - {title: 'test.mkv', 'location': '""" + test_file + """'}
           remux:
             subtitles: keep
         test_remove:
           accept_all: yes
           mock:
-            - {title: 'test.mkv', 'location': '""" + remux_file + """'}
+            - {title: 'test.mkv', 'location': '""" + test_file + """'}
           remux:
             subtitles: remove
         test_formats_text_only:
           accept_all: yes
           mock:
-            - {title: 'test.mkv', 'location': '""" + remux_file + """'}
+            - {title: 'test.mkv', 'location': '""" + test_file + """'}
           remux:
             subtitles:
               formats: text_only
         test_formats_image_only:
           accept_all: yes
           mock:
-            - {title: 'test.mkv', 'location': '""" + remux_file + """'}
+            - {title: 'test.mkv', 'location': '""" + test_file + """'}
           remux:
             subtitles:
               formats: image_only
         test_formats_list:
           accept_all: yes
           mock:
-            - {title: 'test.mkv', 'location': '""" + remux_file + """'}
+            - {title: 'test.mkv', 'location': '""" + test_file + """'}
           remux:
             subtitles:
               formats:
@@ -78,7 +82,7 @@ class TestRemuxSubtitles(object):
         test_languages:
           accept_all: yes
           mock:
-            - {title: 'test.mkv', 'location': '""" + remux_file + """'}
+            - {title: 'test.mkv', 'location': '""" + test_file + """'}
           remux:
             subtitles:
               languages:
@@ -92,21 +96,21 @@ class TestRemuxSubtitles(object):
     execute_task('test_keep')
 
     ct_org = Remux().identify_file(self.org_file)
-    ct_remux = Remux().identify_file(self.remux_file)
+    ct_remux = Remux().identify_file(self.remuxed_file)
     assert ct_remux['tracks'] == ct_org['tracks']
 
   def test_remove(self, execute_task):
     """ Test if all subtitles are removed """
     execute_task('test_remove')
 
-    ct_remux = Remux().identify_file(self.remux_file)
+    ct_remux = Remux().identify_file(self.remuxed_file)
     tracks_remux = Remux().filter_tracks(ct_remux['tracks'], 'type', ['subtitles'])
     assert len(tracks_remux) == 0
 
   def test_formats_text_only(self, execute_task):
     execute_task('test_formats_text_only')
 
-    ct_remux = Remux().identify_file(self.remux_file)
+    ct_remux = Remux().identify_file(self.remuxed_file)
     tracks_remux = Remux().filter_tracks(ct_remux['tracks'], 'type', ['subtitles'])
     assert len(tracks_remux) == 8
 
@@ -116,7 +120,7 @@ class TestRemuxSubtitles(object):
   def test_formats_image_only(self, execute_task):
     execute_task('test_formats_image_only')
 
-    ct_remux = Remux().identify_file(self.remux_file)
+    ct_remux = Remux().identify_file(self.remuxed_file)
     tracks_remux = Remux().filter_tracks(ct_remux['tracks'], 'type', ['subtitles'])
     assert len(tracks_remux) == 1
 
@@ -126,7 +130,7 @@ class TestRemuxSubtitles(object):
   def test_languages(self, execute_task):
     execute_task('test_languages')
 
-    ct_remux = Remux().identify_file(self.remux_file)
+    ct_remux = Remux().identify_file(self.remuxed_file)
     tracks_remux = Remux().filter_tracks(ct_remux['tracks'], 'type', ['subtitles'])
     assert len(tracks_remux) == 3
 
@@ -137,7 +141,7 @@ class TestRemuxSubtitles(object):
   def test_mixed(self, execute_task):
     execute_task('test_mixed')
 
-    ct_remux = Remux().identify_file(self.remux_file)
+    ct_remux = Remux().identify_file(self.remuxed_file)
     tracks_remux = Remux().filter_tracks(ct_remux['tracks'], 'type', ['subtitles'])
     assert len(tracks_remux) == 2
 

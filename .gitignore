@@ -20,3 +20,4 @@ build/
 __pycache__
 .DS_Store
 .tox
+tests/files/testdir/*

@@ -10,7 +10,7 @@ import shutil
 
 from flexget import plugin
 from flexget.event import event
-from flexget.utils.template import render_from_entry, RenderError
+from flexget.utils.template import *
 
 log = logging.getLogger('remux')
 
@@ -18,6 +18,8 @@ log = logging.getLogger('remux')
 
 def default_config(f):
     def wrapper(*args):
+      if 'keep_original' not in args[2]:
+        args[2]['keep_original'] = False
       if 'subtitles' not in args[2]:
         args[2]['subtitles'] = 'keep'
 
@@ -34,7 +36,7 @@ def get_destination(to, rename, entry):
     except RenderError:
         raise plugin.PluginError('Could not render path: %s' % to)
 
-    dst_name = entry.get('location')
+    dst_name = entry.get('title')
     if rename:
       dst_name = entry.render(rename)
 
@@ -63,10 +65,8 @@ class Remux(object):
 
   @default_config
   def on_task_output(self, task, config):
-    # TODO: Add identify_file mocking
-    # TODO: Set meta on entry for reuse?
+    # TODO: Check if dst file already exists
     # TODO: Allow remuxing if there are no track changes but source is not an mkv
-    # TODO: change entry location/title for further processing
     if not task.accepted:
       log.debug('nothing accepted, aborting')
       return
@@ -115,22 +115,33 @@ class Remux(object):
           log.debug('Nothing to remux')
           return
 
-      dst = get_destination('', entry['title'] + '.remux', entry)
+      src = entry['location']
+      file_name = filter_pathname(src)
+      file_ext = filter_pathext(src)
+      file_dir = filter_pathdir(src)
+      dst = os.path.join(file_dir, file_name + '-remuxed.mkv')
 
       # remux file
-      self.remux(
-        src=entry['location'],
-        dst=dst,
-        tracks=sub_tracks
-      )
+      try:
+        self.remux(
+          src=src,
+          dst=dst,
+          tracks=sub_tracks
+        )
+      except Exception as e:
+        shutil.move(src, entry['location'])
+        raise e
 
-      # cleanup
-      backup_dst = get_destination('', entry['title'] + '.backup', entry)
-      shutil.move(entry['location'], backup_dst)
-      shutil.move(dst, entry['location'])
-      os.remove(backup_dst)
+      if not config['keep_original']:
+        os.remove(src)
+      else:
+        entry['location_original'] = src
 
-      log.debug('Succesfully remuxed: %s', entry['location'])
+      # set to entry
+      entry['location'] = dst
+      entry['title'] = filter_pathbase(dst)
+
+      log.debug('Succesfully remuxed: %s to: %s', src, dst)
 
   def filter_subtitle_tracks(self, tracks, languages, formats):
     """
@@ -160,7 +171,12 @@ class Remux(object):
     log.debug('Identifying %s', location)
     p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output, err = p.communicate()
-    return json.loads(output)
+    data = json.loads(output)
+
+    if data['errors']:
+      raise Exception(data['errors'])
+
+    return data
 
   def remux(self, src, dst, tracks):
     command = ['mkvmerge', '-o', dst]
@@ -177,6 +193,11 @@ class Remux(object):
     log.debug('Remuxing with command: %s', ' '.join(command))
     p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output, err = p.communicate()
+
+    # bad error handling. Check if out file is present. If not, raise an error
+    if not os.path.isfile(dst):
+      log.debug('%s', output)
+      raise Exception("Something went wrong during remuxing. Output file is missing")
 
   def filter_tracks(self, tracks, key, value):
     def drill(x, key, value):
