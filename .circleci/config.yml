@@ -1,0 +1,98 @@
+version: 2
+
+# todo add correct caching
+
+install_deps: &install_deps
+  name: Install Dependencies
+  command: |
+    if [ ! -f "venv/bin/python" ]; then
+      virtualenv venv
+    fi
+    . venv/bin/activate
+    pip install -e 'git+git@github.com:Flexget/Flexget.git#egg=flexget[dev]'
+
+run_tests: &run_tests
+  name: Run Tests
+  command: |
+    . venv/bin/activate
+    py.test
+
+jobs:
+  test-py27:
+    docker:
+      - image: flexget/cci-python:2.7
+    environment:
+      - VCR_RECORD_MODE=none
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - py2.7-deps- # fallback to using the latest cache if no exact match is found
+      - run: *install_deps
+      - save_cache:
+          paths:
+            - ./venv
+          key: py2.7-deps-
+      - run: *run_tests
+
+  test-py34:
+    docker:
+      - image: flexget/cci-python:3.4
+    environment:
+      - VCR_RECORD_MODE=none
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - py3.4-deps- # fallback to using the latest cache if no exact match is found
+      - run: *install_deps
+      - save_cache:
+          paths:
+            - ./venv
+          key: py3.4-deps-
+      - run: *run_tests
+
+  test-py35:
+    docker:
+      - image: flexget/cci-python:3.5
+    environment:
+      - VCR_RECORD_MODE=none
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - py3.5-deps- # fallback to using the latest cache if no exact match is found
+      - run: *install_deps
+      - save_cache:
+          paths:
+            - ./venv
+          key: py3.5-deps-
+      - run: *run_tests
+
+  test-py36:
+    docker:
+      - image: flexget/cci-python:3.6
+    environment:
+      - VCR_RECORD_MODE=none
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - py3.6-deps- # fallback to using the latest cache if no exact match is found
+      - run: *install_deps
+      - save_cache:
+          paths:
+            - ./venv
+          key: py3.6-deps-
+      - run: *run_tests
+
+
+workflows:
+  version: 2
+
+  run-tests:
+    jobs:
+      - "test-py27"
+      - "test-py34"
+      - "test-py35"
+      - "test-py36"
