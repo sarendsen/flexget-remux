@@ -157,11 +157,11 @@ class Remux(object):
         '-J',
         location
     ]
-    log.debug('Identifying %s', location)
-    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    output, err = p.communicate()
-    data = json.loads(output)
 
+    log.debug('Identifying %s', location)
+    output = subprocess.check_output(command)
+
+    data = json.loads(output)
     if data['errors']:
       raise Exception(data['errors'])
 
