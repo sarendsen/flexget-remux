@@ -24,9 +24,9 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y apt-transport-https
             wget -q -O - https://mkvtoolnix.download/gpg-pub-moritzbunkus.txt | sudo apt-key add -
-            echo "deb https://mkvtoolnix.download/debian/ stretch main" | sudo tee /etc/apt/sources.list.d/mkvtoolnix.download.list
+            echo "deb https://mkvtoolnix.download/debian/ jessie main" | sudo tee /etc/apt/sources.list.d/mkvtoolnix.download.list
             sudo apt-get update
-            sudo apt-get -t stretch install mkvtoolnix
+            sudo apt-get -t jessie install mkvtoolnix
       - restore_cache:
           keys:
           - v1-dependencies-
