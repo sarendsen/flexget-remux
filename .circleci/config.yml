@@ -24,6 +24,7 @@ jobs:
             wget -q -O - https://mkvtoolnix.download/gpg-pub-moritzbunkus.txt | sudo apt-key add -
             echo "deb https://mkvtoolnix.download/debian/ stretch main" | sudo tee /etc/apt/sources.list.d/mkvtoolnix.download.list
             sudo apt-get update
+            sudo apt-get install apt-transport-https
             sudo apt-get -t stretch install mkvtoolnix
       - restore_cache:
           keys:
