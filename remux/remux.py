@@ -65,6 +65,8 @@ class Remux(object):
 
   @default_config
   def on_task_output(self, task, config):
+    # TODO: Mock mkvtoolnix
+    # TODO: Check if mkvtool
     # TODO: Check if dst file already exists
     # TODO: Allow remuxing if there are no track changes but source is not an mkv
     if not task.accepted:
