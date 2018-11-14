@@ -19,7 +19,7 @@ def setup_files(request):
     os.path.join(FILES_ORG_PATH, 'test.mkv')
   ]
 
-  shutil.rmtree(FILES_REMUX_PATH)
+  shutil.rmtree(FILES_REMUX_PATH, ignore_errors=True)
   os.makedirs(FILES_REMUX_PATH)
 
   for file in files:
