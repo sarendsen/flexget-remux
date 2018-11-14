@@ -159,7 +159,7 @@ class Remux(object):
     ]
 
     log.debug('Identifying %s', location)
-    output = subprocess.check_output(command)
+    output = subprocess.check_output(command, universal_newlines=True)
 
     data = json.loads(output)
     if data['errors']:
