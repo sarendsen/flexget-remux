@@ -15,7 +15,7 @@ run_tests: &run_tests
   name: Run Tests
   command: |
     . venv/bin/activate
-    py.test
+    pytest
 
 jobs:
   test-py27:
