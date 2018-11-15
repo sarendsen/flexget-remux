@@ -1,7 +1,6 @@
 from __future__ import unicode_literals, division, absolute_import
 
 import logging
-#from subprocess import Popen, PIPE, STDOUT
 import subprocess
 import json
 import os
@@ -15,6 +14,9 @@ from flexget.utils.template import *
 log = logging.getLogger('remux')
 
 # See http://matroska-org.github.io/matroska-specification/codec_specs.html for codec mappings
+
+def mkvmerge_installed():
+    return shutil.which('mkvmerge') is not None
 
 def default_config(f):
     def wrapper(*args):
@@ -71,6 +73,10 @@ class Remux(object):
     # TODO: Allow remuxing if there are no track changes but source is not an mkv
     if not task.accepted:
       log.debug('nothing accepted, aborting')
+      return
+
+    if not mkvmerge_installed():
+      log.debug('mkvtoolnix is not avaiable, please install, aborting')
       return
 
     for entry in task.accepted:
