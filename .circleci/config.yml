@@ -36,6 +36,7 @@ jobs:
             python -m venv venv || virtualenv venv
             . venv/bin/activate
             pip install -e 'git+git@github.com:Flexget/Flexget.git#egg=flexget[dev]'
+            pip install whichcraft
       - save_cache:
           paths:
             - ./venv
