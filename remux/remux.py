@@ -7,6 +7,7 @@ import os
 import tempfile
 import shutil
 
+from whichcraft import which
 from flexget import plugin
 from flexget.event import event
 from flexget.utils.template import *
@@ -16,33 +17,33 @@ log = logging.getLogger('remux')
 # See http://matroska-org.github.io/matroska-specification/codec_specs.html for codec mappings
 
 def mkvmerge_installed():
-    return shutil.which('mkvmerge') is not None
+  return which('mkvmerge') is not None
 
 def default_config(f):
-    def wrapper(*args):
-      if 'keep_original' not in args[2]:
-        args[2]['keep_original'] = False
-      if 'subtitles' not in args[2]:
-        args[2]['subtitles'] = 'keep'
+  def wrapper(*args):
+    if 'keep_original' not in args[2]:
+      args[2]['keep_original'] = False
+    if 'subtitles' not in args[2]:
+      args[2]['subtitles'] = 'keep'
 
-      return f(*args)
-    return wrapper
+    return f(*args)
+  return wrapper
 
 
 def get_destination(to, rename, entry):
-    try:
-        if to:
-            dst = render_from_entry(to, entry)
-        else:
-            dst = os.path.dirname(entry.get('location'))
-    except RenderError:
-        raise plugin.PluginError('Could not render path: %s' % to)
+  try:
+      if to:
+          dst = render_from_entry(to, entry)
+      else:
+          dst = os.path.dirname(entry.get('location'))
+  except RenderError:
+      raise plugin.PluginError('Could not render path: %s' % to)
 
-    dst_name = entry.get('title')
-    if rename:
-      dst_name = entry.render(rename)
+  dst_name = entry.get('title')
+  if rename:
+    dst_name = entry.render(rename)
 
-    return os.path.join(dst, dst_name)
+  return os.path.join(dst, dst_name)
 
 
 class Remux(object):
