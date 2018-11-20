@@ -77,7 +77,7 @@ class Remux(object):
       return
 
     if not mkvmerge_installed():
-      log.debug('mkvtoolnix is not avaiable, please install, aborting')
+      log.error('MKVToolNix is not avaiable, please install, aborting')
       return
 
     for entry in task.accepted:
