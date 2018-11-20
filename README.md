@@ -5,7 +5,7 @@ Flexget Remux allows for remuxing supported media files into a Matroksa file (mk
 Currently supports remuxing subtitles tracks.
 
 Example
-=======
+-------
 
     tasks:
     remux_task
@@ -25,19 +25,23 @@ Example
            - S_TEXT/UTF8
 
 Options
-=======
+-------
 
-| Name  | Info | Description |
+| Option  | Info | Description |
 | ------------- | --------- | --------- |
-| subtitles  | keep|remove|dict  | |
+| subtitles  | keep\|remove\|dict  | |
 
 
-Subitle options
-===============
+### Subtitle options
+
+| Option  | Info | Description |
+| ------------- | --------- | --------- |
+| languages  | list  | List of language codes (ISO 639-2) to keep |
+| formats  | image_only\|test_only\|list  | List of [format codes](http://matroska-org.github.io/matroska-specification/codec_specs.html ) to keep |
 
 
 Requirements
-============
+------------
 
 - [FlexGet](https://github.com/Flexget/Flexget)
 - [MKVToolNix](https://mkvtoolnix.download)
