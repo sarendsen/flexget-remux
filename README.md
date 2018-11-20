@@ -33,12 +33,12 @@ Options
 | subtitles  | keep\|remove\|dict | |
 
 
-### Subtitle options
+### Subtitles options
 
 | Option  | Info | Description |
 | ------------- | --------- | --------- |
 | languages  | list  | List of language codes (ISO 639-2) to keep |
-| formats  | image_only\|text_only\|list  | 'image_only' to keep bitmap/image based subtitles, text_only for text based subtitles or a list of subtitle [format codes](http://matroska-org.github.io/matroska-specification/codec_specs.html ) to keep |
+| formats  | image_only\|text_only\|list  | 'image_only' to keep bitmap/image based subtitles, 'text_only' for text based subtitles or a list of subtitle [format codes](http://matroska-org.github.io/matroska-specification/codec_specs.html ) to keep |
 
 
 Requirements
