@@ -9,6 +9,8 @@ import pytest
 from remux.remux import Remux
 from flexget.tests.conftest import *
 
+# TODO: Add keep_original test
+
 LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
 FILES_ORG_PATH = os.path.join(LOCAL_PATH, 'files/org')
 FILES_REMUX_PATH = os.path.join(LOCAL_PATH, 'files/testdir')

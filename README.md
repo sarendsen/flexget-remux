@@ -29,6 +29,7 @@ Options
 
 | Option  | Info | Description |
 | ------------- | --------- | --------- |
+| keep_original  | true|false | keep the original file or not(default: false) |
 | subtitles  | keep\|remove\|dict | |
 
 
@@ -45,3 +46,11 @@ Requirements
 
 - [FlexGet](https://github.com/Flexget/Flexget)
 - [MKVToolNix](https://mkvtoolnix.download)
+
+
+Notes
+------------
+
+The entry will be replaced with the remux file name and location, and will have '-remuxed' appended to the filename.
+Extra space is required for the remux file to be created. 
+The original file will be automaticly deleted afterwards (if the option is not set to true).
