@@ -14,7 +14,7 @@ Example
         recursive: yes
         retrieve: files
         regexp: '.*\.(avi|mkv|mp4)$'
-        accept_all: yes
+      accept_all: yes
       remux:
         subtitles:
           languages:
@@ -27,9 +27,9 @@ Example
 Options
 -------
 
-| Option  | Info | Description |
-| ------------- | --------- | --------- |
-| subtitles  | keep\|remove\|dict  | |
+| Option  | Info |
+| ------------- | --------- |
+| subtitles  | keep\|remove\|dict |
 
 
 ### Subtitle options
