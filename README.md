@@ -29,7 +29,7 @@ Options
 
 | Option  | Info | Description |
 | ------------- | --------- | --------- |
-| keep_original  | true|false | keep the original file or not \(default: false\) |
+| keep_original  | true\|false | keep the original file or not \(default: false\) |
 | subtitles  | keep\|remove\|dict | |
 
 
