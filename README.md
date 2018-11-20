@@ -27,9 +27,9 @@ Example
 Options
 -------
 
-| Option  | Info |
-| ------------- | --------- |
-| subtitles  | keep\|remove\|dict |
+| Option  | Info | Description |
+| ------------- | --------- | --------- |
+| subtitles  | keep\|remove\|dict | |
 
 
 ### Subtitle options
@@ -37,7 +37,7 @@ Options
 | Option  | Info | Description |
 | ------------- | --------- | --------- |
 | languages  | list  | List of language codes (ISO 639-2) to keep |
-| formats  | image_only\|test_only\|list  | List of [format codes](http://matroska-org.github.io/matroska-specification/codec_specs.html ) to keep |
+| formats  | image_only\|text_only\|list  | 'image_only' to keep bitmap/image based subtitles, text_only for text based subtitles or a list of subtitle [format codes](http://matroska-org.github.io/matroska-specification/codec_specs.html ) to keep |
 
 
 Requirements
