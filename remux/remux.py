@@ -77,8 +77,7 @@ class Remux(object):
       return
 
     if not mkvmerge_installed():
-      log.error('MKVToolNix is not avaiable, please install, aborting')
-      return
+      raise plugin.DependencyError('remux', 'MKVToolNix', 'MKVToolNix required', log)
 
     for entry in task.accepted:
       if not 'location' in entry:
