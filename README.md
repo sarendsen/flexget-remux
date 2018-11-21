@@ -32,7 +32,7 @@ Options
 | Option  | Info | Description |
 | ------------- | --------- | --------- |
 | keep_original  | true\|false | keep the original file or not \(default: false\) |
-| subtitles  | keep\|remove\|dict | |
+| subtitles  | keep\|remove\|dict | \(default: keep\) |
 
 
 ### Subtitles options
