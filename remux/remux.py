@@ -68,27 +68,24 @@ class Remux(object):
 
   @default_config
   def on_task_output(self, task, config):
-    # TODO: Mock mkvtoolnix
-    # TODO: Check if mkvtool
     # TODO: Check if dst file already exists
-    # TODO: Allow remuxing if there are no track changes but source is not an mkv
-    if not task.accepted:
-      log.debug('nothing accepted, aborting')
-      return
-
     if not mkvmerge_installed():
       raise plugin.DependencyError('remux', 'MKVToolNix', 'MKVToolNix required', log)
 
     for entry in task.accepted:
       if not 'location' in entry:
-        log.debug('no file location specified, aborting')
-        return
+        log.warning('Cannot handle %s because it does not have the field location.', entry['title'])
+        continue
 
-      file_info = self.identify_file(entry['location'])
+      try:
+        file_info = self.identify_file(entry['location'])
+      except Exception as e:
+        entry.fail(str(e))
+        continue
 
       if not file_info['container']['supported']:
-        log.debug('unsupported file, aborting')
-        return
+        log.warning('Cannot proccess %s because it is an unsupported file format.', entry['title'])
+        continue
 
       # subtitles
       sub_tracks = {}
@@ -124,8 +121,8 @@ class Remux(object):
           tracks=sub_tracks
         )
       except Exception as e:
-        shutil.move(src, entry['location'])
-        raise e
+        entry.fail(str(e))
+        continue
 
       if not config['keep_original']:
         os.remove(src)
@@ -191,7 +188,7 @@ class Remux(object):
 
     # bad error handling. Check if out file is present. If not, raise an error
     if not os.path.isfile(dst):
-      log.debug('%s', output)
+      log.error('%s', output)
       raise Exception("Something went wrong during remuxing. Output file is missing")
 
   def filter_tracks(self, tracks, key, value):
