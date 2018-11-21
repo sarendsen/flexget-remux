@@ -1,6 +1,8 @@
 FlexGet Remux
 =============
 
+[![CircleCI](https://circleci.com/gh/sarendsen/flexget-remux.svg?style=svg)](https://circleci.com/gh/sarendsen/flexget-remux)
+
 Flexget Remux allows for remuxing supported media files into a Matroksa file (mkv). 
 Currently supports remuxing subtitles tracks.
 
