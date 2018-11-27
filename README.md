@@ -31,7 +31,7 @@ Options
 
 | Option  | Info | Description |
 | ------------- | --------- | --------- |
-| keep_original  | true\|false | keep the original file or not \(default: false\) |
+| keep_original  | true\|false | keep the original file or remove it after remuxing \(default: false\) |
 | subtitles  | keep\|remove\|dict | \(default: keep\) |
 
 
@@ -40,7 +40,7 @@ Options
 | Option  | Info | Description |
 | ------------- | --------- | --------- |
 | languages  | list  | List of language codes (ISO 639-2) to keep |
-| formats  | image_only\|text_only\|list  | 'image_only' to keep bitmap/image based subtitles, 'text_only' for text based subtitles or a list of subtitle [format codes](http://matroska-org.github.io/matroska-specification/codec_specs.html ) to keep |
+| formats  | image_only\|text_only\|list  | 'image_only' to only keep bitmap/image based subtitles, 'text_only' for text based subtitles only. Or a list of subtitle [format codes](http://matroska-org.github.io/matroska-specification/codec_specs.html ) to keep |
 
 
 Requirements

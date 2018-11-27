@@ -67,6 +67,7 @@ class Remux(object):
   }
 
   @default_config
+  @plugin.priority(255)
   def on_task_output(self, task, config):
     # TODO: Check if dst file already exists
     if not mkvmerge_installed():
